@@ -1,5 +1,5 @@
 package com.serviceHub.backend.dto;
 
-public class BookingsDTO {
+public class BookingDTO {
 		
 }

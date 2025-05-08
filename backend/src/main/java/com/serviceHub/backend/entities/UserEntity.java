@@ -1,19 +1,7 @@
 package com.serviceHub.backend.entities;
-
+import jakarta.persistence.*;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,30 +13,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class UserEntity {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="userId")
-	private long id;
-	@Column(nullable=false,length=20)
-	private String fullName;
-	@Column(unique = true, nullable = false)
-	private String email;
-	@Column(nullable=false)
-	private String address;
-	@Column(length=13,nullable=false)
-	private String number;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="userid")
+	private int userid;
+	@Column(name="name",nullable = false,length=50)
+	private String name;
+	@Column(name="emailid",nullable = false,length=50,unique = true)
+	private String emailid;
+	@Column(name="password",nullable = false,length=20)
 	private String password;
-	private enum Role{
-		customer,provider,
-	}
-	@Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-	private Role role=Role.customer;
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	@JsonIgnore
-
-	private List<BookingEntity>bookings;
+	@Column(name="role",nullable = false,length=20)
+	private String role;
 }
