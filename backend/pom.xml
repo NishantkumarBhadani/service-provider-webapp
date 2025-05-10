@@ -68,11 +68,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		-->
 		
 		<!-- JWT Authentication -->
 		<dependency>
@@ -109,6 +111,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    			<version>0.0.20131108.vaadin1</version>
    			<scope>compile</scope>
 		</dependency>
+		
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
+
 
 	</dependencies>
 

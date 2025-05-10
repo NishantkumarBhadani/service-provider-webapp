@@ -17,16 +17,17 @@ public class UserController {
     @Autowired
     private UsersService userService;
 
-//    // Get all users
-//    @GetMapping("/")
-//    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-//        return ResponseEntity.ok(userService.getAllUsers());
-//    }
+    // Get all users
+    @GetMapping("/allUsers")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+    
 
     // Get user by ID
     @GetMapping("/get/{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable int id) {
-        UserResponseDto user = userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
+    	UserDTO user = userService.getUserById(id);
         if (user != null)
             return ResponseEntity.ok(user);
         else
@@ -35,15 +36,17 @@ public class UserController {
 
     // Create new user
     @PostMapping("/create")
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.createUser(userDTO));
     }
+    
 
     // Update user
     @PutMapping("/edit")
-    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(userDTO));
     }
+    
 
     // Delete user
     @DeleteMapping("/delete/{id}")
@@ -61,13 +64,11 @@ public class UserController {
 //            return ResponseEntity.status(401).body(null);
 //    }
     
-    @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> loginUser(@RequestBody UserDTO userDTO) {
-        UserResponseDto user = userService.validateUser(userDTO.getEmailid(), userDTO.getPassword());
-        if (user != null)
-            return ResponseEntity.ok(user);
-        else
-            return ResponseEntity.status(401).body(null);
-    }
+    @PostMapping(value="login")
+	public UserDTO userLogin(@RequestParam("emailid") String email,
+			@RequestParam("password") String password)
+	{
+		return userService.validateUser(email, password);
+	}
 
 }

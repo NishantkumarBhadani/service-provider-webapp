@@ -27,4 +27,8 @@ public class UserEntity {
 	private String password;
 	@Column(name="role",nullable = false,length=20)
 	private String role;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<BookingEntity> bookings;
 }

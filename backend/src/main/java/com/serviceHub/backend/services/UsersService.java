@@ -2,7 +2,9 @@ package com.serviceHub.backend.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,60 +20,57 @@ public class UsersService implements IUsersService{
 	@Autowired
 	private IUserrepository userRepository;
 	
-	//covert userDto to useEntity
-	private UserEntity convertToEntity(UserDTO userDTO) {
-		return new UserEntity(
-					userDTO.getUserid(),
-					userDTO.getName(),
-					userDTO.getEmailid(),
-					userDTO.getPassword(),
-					userDTO.getRole()
-					
-				);
-	}
+	private final ModelMapper mapper = new ModelMapper();
 	
-	//covert useEntity to userResponseDto
-	private UserResponseDto convertToResponseDto(UserEntity userEntity) {
-		return new UserResponseDto(
-				userEntity.getUserid(),
-				userEntity.getName(),
-				userEntity.getEmailid(),
-				userEntity.getRole()
-			);
-	}
+//	//covert userDto to useEntity
+//	private UserEntity convertToEntity(UserDTO userDTO) {
+//		return new UserEntity(
+//					userDTO.getUserid(),
+//					userDTO.getName(),
+//					userDTO.getEmailid(),
+//					userDTO.getPassword(),
+//					userDTO.getRole()
+//					
+//				);
+//	}
+//	
+//	//covert useEntity to userResponseDto
+//	private UserResponseDto convertToResponseDto(UserEntity userEntity) {
+//		return new UserResponseDto(
+//				userEntity.getUserid(),
+//				userEntity.getName(),
+//				userEntity.getEmailid(),
+//				userEntity.getRole()
+//			);
+//	}
 	@Override
-	public UserResponseDto createUser(UserDTO userdto) {
+	public UserDTO createUser(UserDTO user) {
 		// TODO Auto-generated method stub
-		UserEntity userEntity=convertToEntity(userdto);
-		UserEntity savedUser=userRepository.save(userEntity);
-		return convertToResponseDto(savedUser);
+		UserEntity userEntity=mapper.map(user, UserEntity.class);
+		return mapper.map(userRepository.save(userEntity), UserDTO.class);
 	}
 
+
 	@Override
-	public UserResponseDto updateUser(UserDTO userdto) {
+	public UserDTO updateUser(UserDTO user) {
 	   //checkinng user is present or not
-	    UserEntity existingUser = userRepository.findById(userdto.getUserid())
-	        .orElseThrow(() -> new RuntimeException("User not found with id: " + userdto.getUserid()));
-
-	
-	    existingUser.setName(userdto.getName());
-	    existingUser.setEmailid(userdto.getEmailid());
-	   
-	    UserEntity updatedUser = userRepository.save(existingUser);
-
-	
-	    return convertToResponseDto(updatedUser);
+		UserEntity userEntity = mapper.map(user, UserEntity.class);
+		if (userEntity.getUserid()>0){
+			return mapper.map(userRepository.save(userEntity), UserDTO.class);
+		}
+		return null;
+		
 	}
 
 
 	@Override
 	public String deleteUser(int id) {
 		// Check if user exists
-        Optional<UserEntity> userOptional = userRepository.findById(id);
+        Optional<UserEntity> user = userRepository.findById(id);
         
-        if (userOptional.isPresent()) {
+        if (user.isPresent()) {
             // If user exists, delete it
-            userRepository.delete(userOptional.get());
+            userRepository.delete(user.get());
             return "User is deleted successfully.";
         }
         
@@ -79,40 +78,39 @@ public class UsersService implements IUsersService{
 	}
 
 	@Override
-	public UserResponseDto getUserById(int id) {
+	public UserDTO getUserById(int id) {
 		 // Find user by ID
-        Optional<UserEntity> userOptional = userRepository.findById(id);
+        Optional<UserEntity> user = userRepository.findById(id);
         
-        if (userOptional.isPresent()) {
-            // Convert UserEntity to UserResponseDto and return it
-            return convertToResponseDto(userOptional.get());
+        if (user.isPresent()) {
+        	return mapper.map(user.get(), UserDTO.class);
         }
         
         return null; // Or throw custom exception if needed
 	}
 
-//	@Override
-//	public List<UserResponseDto> getAllUsers() {
-//		List<UserEntity> users=userRepository.findAll();
-//		
-//		//conversion of each user to 
-//		}
+	@Override
+	public List<UserDTO> getAllUsers() {
+	    List<UserEntity> entities = userRepository.findAll();
+
+	   
+	    return entities.stream().map(entity -> mapper.map(entity, UserDTO.class)).collect(Collectors.toList());
+	}
+
 
 	@Override
-	public UserResponseDto validateUser(String emailid, String password) {
-		// TODO Auto-generated method stub
-		
-		Optional<UserEntity> optionalUser=userRepository.findByEmailid(emailid);
-		if(optionalUser.isPresent()) {
-			UserEntity userEntity=optionalUser.get();
-		
-			if(userEntity.getPassword().equals(password))
-			{
-				return convertToResponseDto(userEntity);
-			}
-		}
-		return null;
+	public UserDTO validateUser(String emailid, String password) {
+	    Optional<UserEntity> user = userRepository.findByEmailid(emailid);
+
+	    if (user.isPresent()) {
+	        if (user.get().getPassword().equals(password)) {
+	            return mapper.map(user.get(), UserDTO.class);
+	        }
+	    }
+
+	    return null;
 	}
+
 	
 
 }

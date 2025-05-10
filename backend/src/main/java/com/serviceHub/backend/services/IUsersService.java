@@ -8,10 +8,12 @@ import com.serviceHub.backend.dto.UserResponseDto;
 
 public interface IUsersService {
 	
-	UserResponseDto createUser(UserDTO userdto);
-	UserResponseDto updateUser(UserDTO userdto);
+	UserDTO createUser(UserDTO userdto);
+	UserDTO updateUser(UserDTO userdto);
 	String deleteUser(int id);
-	UserResponseDto getUserById(int id);
-//	List<UserResponseDto> getAllUsers();
-	UserResponseDto validateUser(String emailid,String password);
+	UserDTO getUserById(int id);
+	List<UserDTO> getAllUsers();
+	UserDTO validateUser(String emailid,String password);
+	
+	
 }

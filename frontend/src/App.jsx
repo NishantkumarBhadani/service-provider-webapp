@@ -7,7 +7,10 @@ import MaidServices from "./pages/MaidServices";
 import ElectricianServices from "./pages/ElectricianServices";
 import AboutUs from "./pages/AboutUs";
 import Contact from "./pages/Contact";
-import { Login, Register } from "./pages/Login";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/adminDashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -47,7 +50,15 @@ function App() {
         },
         {
           path:"signup",
-          element:<Register/>
+          element:<SignUp/>
+        },
+        {
+          path:"userdashboard",
+          element:<UserDashboard/>
+        },
+        {
+          path:"admindashboard",
+          element:<AdminDashboard/>
         }
       ]
     },
